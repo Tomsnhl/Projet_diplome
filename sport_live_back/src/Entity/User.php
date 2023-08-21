@@ -54,9 +54,27 @@ class User
      */
     private $messages;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Poll::class, mappedBy="user")
+     */
+    private $polls;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Answer::class, mappedBy="user")
+     */
+    private $answers;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Answer::class, inversedBy="users")
+     */
+    private $selectedAnswers;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
+        $this->polls = new ArrayCollection();
+        $this->answers = new ArrayCollection();
+        $this->selectedAnswers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -157,6 +175,90 @@ class User
                 $message->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Poll>
+     */
+    public function getPolls(): Collection
+    {
+        return $this->polls;
+    }
+
+    public function addPoll(Poll $poll): self
+    {
+        if (!$this->polls->contains($poll)) {
+            $this->polls[] = $poll;
+            $poll->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePoll(Poll $poll): self
+    {
+        if ($this->polls->removeElement($poll)) {
+            // set the owning side to null (unless already changed)
+            if ($poll->getUser() === $this) {
+                $poll->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswers(): Collection
+    {
+        return $this->answers;
+    }
+
+    public function addAnswer(Answer $answer): self
+    {
+        if (!$this->answers->contains($answer)) {
+            $this->answers[] = $answer;
+            $answer->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnswer(Answer $answer): self
+    {
+        if ($this->answers->removeElement($answer)) {
+            // set the owning side to null (unless already changed)
+            if ($answer->getUser() === $this) {
+                $answer->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getSelectedAnswers(): Collection
+    {
+        return $this->selectedAnswers;
+    }
+
+    public function addSelectedAnswer(Answer $selectedAnswer): self
+    {
+        if (!$this->selectedAnswers->contains($selectedAnswer)) {
+            $this->selectedAnswers[] = $selectedAnswer;
+        }
+
+        return $this;
+    }
+
+    public function removeSelectedAnswer(Answer $selectedAnswer): self
+    {
+        $this->selectedAnswers->removeElement($selectedAnswer);
 
         return $this;
     }
