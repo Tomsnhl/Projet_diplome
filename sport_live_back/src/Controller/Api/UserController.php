@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\API;
 
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,7 +9,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Contrôleur pour gérer les endpoints d'API liés aux utilisateurs.
+ * Contrôleur API pour gérer les endpoints liés aux utilisateurs.
+ * 
+ * @Route("/api/users")
  */
 class UserController extends AbstractController
 {
@@ -26,25 +28,19 @@ class UserController extends AbstractController
     }
 
     /**
-     * Endpoint pour l'inscription d'un nouvel utilisateur.
+     * Inscription d'un nouvel utilisateur.
      * 
-     * @Route("/api/users/register", name="user_register", methods={"POST"})
+     * @Route("/register", name="user_register", methods={"POST"})
      * 
      * @param Request $request Requête HTTP reçue.
      * @return JsonResponse Réponse contenant le résultat de l'inscription.
      */
     public function register(Request $request): JsonResponse
     {
-        // Convertit le contenu JSON de la requête en tableau PHP.
         $data = json_decode($request->getContent(), true);
-
-        // Utilise le service pour inscrire un nouvel utilisateur.
         $this->userService->register($data);
-        
-        // Renvoie une réponse JSON indiquant que l'utilisateur a été inscrit avec succès.
         return $this->json(['message' => 'Inscription réussie.']);
     }
 
-    // Ajoutez d'autres endpoints selon les besoins, par exemple pour la connexion
+    // Ajout d'autres endpoints selon les besoins, par exemple pour la connexion
 }
-
