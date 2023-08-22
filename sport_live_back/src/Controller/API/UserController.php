@@ -38,8 +38,8 @@ class UserController extends AbstractController
     public function register(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $this->userService->register($data);
-        return $this->json(['message' => 'Inscription réussie.']);
+        $user = $this->userService->register($data);
+        return $this->json($user, 200, [], ['groups' => 'user:read']);
     }
 
     // Ajout d'autres endpoints selon les besoins, par exemple pour la connexion

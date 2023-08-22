@@ -6,6 +6,7 @@ use App\Repository\PollRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PollRepository::class)
@@ -16,21 +17,25 @@ class Poll
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("poll:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("poll:read")
      */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="polls")
+     * @Groups("poll:read")
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity=Answer::class, mappedBy="poll")
+     * @Groups("poll:read")
      */
     private $answers;
 

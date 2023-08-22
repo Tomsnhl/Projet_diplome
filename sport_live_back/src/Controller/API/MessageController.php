@@ -53,18 +53,7 @@ class MessageController extends AbstractController
     public function getMessages(): JsonResponse
     {
         $messages = $this->messageService->getAllMessages();
-        
-        $messagesArray = [];
-        foreach ($messages as $message) {
-            $messagesArray[] = [
-                'id' => $message->getId(),
-                'content' => $message->getContent(),
-                'sentDate' => $message->getSentDate()->format('Y-m-d H:i:s'),
-                'isApproved' => $message->getIsApproved()
-            ];
-        }
-
-        return $this->json(['messages' => $messagesArray]);
+        return $this->json($messages, 200, [], ['groups' => 'message:read']);
     }
 
     /**
@@ -83,12 +72,7 @@ class MessageController extends AbstractController
             return $this->json(['error' => 'Message not found'], 404);
         }
 
-        return $this->json([
-            'id' => $message->getId(),
-            'content' => $message->getContent(),
-            'sentDate' => $message->getSentDate()->format('Y-m-d H:i:s'),
-            'isApproved' => $message->getIsApproved()
-        ]);
+        return $this->json($message, 200, [], ['groups' => 'message:read']);
     }
 
     /**

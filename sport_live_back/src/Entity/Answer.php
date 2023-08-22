@@ -6,6 +6,7 @@ use App\Repository\AnswerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=AnswerRepository::class)
@@ -16,16 +17,19 @@ class Answer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("answer:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("answer:read")
      */
     private $content;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("answer:read")
      */
     private $rank;
 
@@ -48,6 +52,8 @@ class Answer
     {
         $this->users = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {

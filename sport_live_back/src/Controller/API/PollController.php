@@ -42,7 +42,7 @@ class PollController extends AbstractController
         return $this->json($poll);
     }
 
-    /**
+   /**
      * Endpoint pour récupérer un sondage spécifique par son ID.
      *
      * @Route("/{id}", name="get_specific_poll", methods={"GET"})
@@ -52,7 +52,7 @@ class PollController extends AbstractController
     public function getPoll(int $id): JsonResponse
     {
         $poll = $this->pollService->getPoll($id);
-        return $this->json($poll);
+        return $this->json($poll, 200, [], ['groups' => 'poll:read']);
     }
 
     /**
@@ -64,7 +64,7 @@ class PollController extends AbstractController
     public function getAllPolls(): JsonResponse
     {
         $polls = $this->pollService->getAllPolls();
-        return $this->json($polls);
+        return $this->json($polls, 200, [], ['groups' => 'poll:read']);
     }
 
     /**

@@ -6,28 +6,34 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("user:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("user:read")
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("user:read")
      */
     private $lastname;
+
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -148,9 +154,6 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection|Message[]
-     */
     public function getMessages(): Collection
     {
         return $this->messages;
@@ -170,7 +173,6 @@ class User
     {
         if ($this->messages->contains($message)) {
             $this->messages->removeElement($message);
-            // set the owning side to null (unless already changed)
             if ($message->getUser() === $this) {
                 $message->setUser(null);
             }
@@ -179,9 +181,6 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, Poll>
-     */
     public function getPolls(): Collection
     {
         return $this->polls;
@@ -200,7 +199,6 @@ class User
     public function removePoll(Poll $poll): self
     {
         if ($this->polls->removeElement($poll)) {
-            // set the owning side to null (unless already changed)
             if ($poll->getUser() === $this) {
                 $poll->setUser(null);
             }
@@ -209,9 +207,6 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, Answer>
-     */
     public function getAnswers(): Collection
     {
         return $this->answers;
@@ -230,7 +225,6 @@ class User
     public function removeAnswer(Answer $answer): self
     {
         if ($this->answers->removeElement($answer)) {
-            // set the owning side to null (unless already changed)
             if ($answer->getUser() === $this) {
                 $answer->setUser(null);
             }
@@ -239,9 +233,6 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, Answer>
-     */
     public function getSelectedAnswers(): Collection
     {
         return $this->selectedAnswers;
@@ -259,7 +250,56 @@ class User
     public function removeSelectedAnswer(Answer $selectedAnswer): self
     {
         $this->selectedAnswers->removeElement($selectedAnswer);
-
         return $this;
     }
+
+    /**
+ * Cette méthode est nécessaire pour l'interface UserInterface.
+ * Elle renvoie les rôles accordés à l'utilisateur.
+ * Chaque rôle est une chaîne de caractères (p.ex. 'ROLE_USER', 'ROLE_ADMIN').
+ */
+public function getRoles(): array
+{
+    return array_unique(['ROLE_USER', $this->getRole()]);
+}
+
+/**
+ * Cette méthode est nécessaire pour l'interface UserInterface.
+ * Pour certains mécanismes d'encodage de mot de passe anciens, une "salt" (sel) est utilisée en plus du mot de passe pour le hachage.
+ * Avec l'encodage moderne, cela n'est généralement pas nécessaire.
+ * Laisser cette méthode retourner null.
+ */
+public function getSalt()
+{
+    return null;
+}
+
+/**
+ * Cette méthode est nécessaire pour l'interface UserInterface.
+ * Elle renvoie le nom d'utilisateur qui est utilisé pour l'authentification.
+ * Il s'agit de l'adresse e-mail de l'utilisateur.
+ */
+public function getUsername(): string
+{
+    return $this->getEmail();
+}
+
+/**
+ * Cette méthode est nécessaire pour l'interface UserInterface depuis Symfony 5.3+.
+ * Elle renvoie l'identifiant de l'utilisateur, qui pourrait être un nom d'utilisateur, une adresse e-mail, etc.
+ * Dans les versions récentes de Symfony, cette méthode remplace getUsername() pour identifier un utilisateur.
+ */
+public function getUserIdentifier(): string
+{
+    return $this->getEmail();
+}
+
+/**
+ * Cette méthode est nécessaire pour l'interface UserInterface.
+ * Elle est utilisée pour effacer les informations sensibles de l'utilisateur qui ne devraient pas être persistées (par exemple, un mot de passe en clair).
+ */
+public function eraseCredentials()
+{
+}
+
 }
