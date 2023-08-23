@@ -1,0 +1,63 @@
+security:
+    # Activation du nouveau gestionnaire d'authentification introduit dans Symfony 5.2.
+    enable_authenticator_manager: true
+
+    # Cette section définit comment les mots de passe sont encodés.
+    encoders:
+        # L'entité User utilisera bcrypt comme algorithme de hachage.
+        App\Entity\User:
+            algorithm: bcrypt
+
+    # Cette section définit comment les utilisateurs sont chargés à partir de la source de données.
+    providers:
+        # Création d'un provider nommé "app_user_provider" basé sur l'entité.
+        app_user_provider:
+            entity:
+                # Utilisation de l'entité User pour charger les utilisateurs.
+                class: App\Entity\User
+                # La propriété "username" de l'entité User est utilisée comme identifiant unique.
+                property: email
+
+    # Cette section définit comment l'authentification est gérée.
+    firewalls:
+        # Règles spéciales pour les outils de développement de Symfony.
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        # Définition du firewall pour l'endpoint de connexion.
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            
+            json_login:
+                # L'URL à laquelle les demandes de connexion doivent être envoyées.
+                check_path: /api/login_check
+                # Handlers pour les événements de succès et d'échec.
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        # Définition du firewall pour les endpoints API.
+        api:
+            pattern:   ^/api
+            stateless: true
+            # Utilisation de JWT (JSON Web Token) pour l'authentification.
+            jwt:       ~
+
+    # Règles d'accès pour définir qui peut accéder à quelles URL.
+    access_control:
+        # Tout le monde peut accéder à l'endpoint de connexion.
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Autorisée les visiteur a s'enregistré
+        - { path: ^/api/users/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }  
+        # Seuls les administrateurs peuvent accéder aux endpoints liés aux sondages.
+        - { path: ^/api/polls, roles: ROLE_ADMIN }
+        # Seuls les utilisateurs authentifiés peuvent accéder aux autres endpoints API.
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+# Configuration spécifique pour l'environnement de test.
+when@test:
+    security:
+        password_hashers:
+            App\Entity\User:
+                # Utilisation de bcrypt pour le hachage, mais avec un coût réduit pour accélérer les tests.
+                algorithm: bcrypt
+                cost: 4
