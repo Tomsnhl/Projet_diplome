@@ -12,9 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @isGranted("BACK_OFFICE_ACCESS", message="Rentres chez toi !")
- */
+
 class UserController extends AbstractController
 {
     /**
