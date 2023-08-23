@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Dashboard SportLive</h1>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#sportEvents" data-toggle="tab">Événements sportifs</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#polls" data-toggle="tab">Sondages</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#chatMessages" data-toggle="tab">Messages du chat</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#users" data-toggle="tab">Utilisateurs</a>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content mt-4">
+        <div class="tab-pane active" id="sportEvents">
+            {% include 'back/admin/events.html.twig' %}
+        </div>
+        <div class="tab-pane" id="polls">
+            {% include 'back/admin/polls.html.twig' %}
+        </div>
+        <div class="tab-pane" id="chatMessages">
+            {% include 'back/admin/chat_messages.html.twig' %}
+        </div>
+        <div class="tab-pane" id="users">
+            {% include 'back/admin/users.html.twig' %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
