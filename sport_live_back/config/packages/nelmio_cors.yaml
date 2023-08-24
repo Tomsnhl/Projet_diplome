@@ -1,7 +1,7 @@
 nelmio_cors:
     defaults:
         origin_regex: true
-        allow_origin: ['^http://localhost:[0-9]+$', '^https://projet-08-sport-live-back.vercel.app']
+        allow_origin: ['^http://localhost:[0-9]+$', '^http://votreautredomaine.com$']
         allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
         allow_headers: ['Content-Type', 'Authorization']
         max_age: 3600

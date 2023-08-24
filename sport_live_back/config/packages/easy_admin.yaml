@@ -3,4 +3,4 @@ easy_admin:
         Poll:
             class: App\Entity\Poll
         User:
-            class: App\Entity\User
+            class: App\Entity\User 
