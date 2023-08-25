@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use App\Form\UserType; // Assurez-vous d'avoir ce formulaire UserType.
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 class DashboardController extends AbstractDashboardController
@@ -39,13 +40,20 @@ class DashboardController extends AbstractDashboardController
     /**
      * @Route("/admin", name="admin")
      */
-    public function dashboard(Request $request): Response
+    public function dashboard(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Je pense à hasher le mot de passe
+            // Je récupère le mot de passe en clair
+            $plainPassword = $user->getPassword();
+            // Je le hash
+            $passwordHash = $passwordHasher->hashPassword($user,$plainPassword);
+            // Je set le mot de passe
+            $user->setPassword($passwordHash);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
