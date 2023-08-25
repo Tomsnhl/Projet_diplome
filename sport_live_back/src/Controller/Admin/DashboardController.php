@@ -2,21 +2,22 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Message;
 use App\Entity\User;
-use App\Form\UserType; // Assurez-vous d'avoir ce formulaire UserType.
+use DateTimeImmutable;
+use App\Entity\Message;
 use App\Form\MessageType;
-use App\Repository\AnswerRepository;
-use App\Repository\MessageRepository;
 use App\Repository\PollRepository;
 use App\Repository\UserRepository;
+use App\Repository\AnswerRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use App\Form\UserType; // Assurez-vous d'avoir ce formulaire UserType.
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 class DashboardController extends AbstractDashboardController
 {
@@ -53,6 +54,11 @@ class DashboardController extends AbstractDashboardController
         }
 
         $message = new Message();
+        $message->setSentDate(new \DateTimeImmutable('now'));
+        $message->setIsApproved('false');
+        $message->setIsDeleted('false');
+        $message->setUser($user=$this->getUser(''));
+        //dump($message);
         $messageForm = $this->createForm(MessageType::class, $message);
         $messageForm->handleRequest($request);
 
