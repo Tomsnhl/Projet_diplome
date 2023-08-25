@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class User implements UserInterface
 {
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
