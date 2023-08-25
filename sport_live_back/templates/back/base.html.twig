@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block nav %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ path('app_main_home') }}">Retour front-office</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link {% block movieActive %}{% endblock %}" href="{{ path('app_back_movie_list') }}">Crud film</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link {% block userActive %}{% endblock %}" href="{{ path('app_back_user_list') }}">Crud User</a>
+</li>
+{% endblock %}
+
+{% block navCss %}bg-secondary{% endblock %}
+
+{% block body %}
+<main class="container my-5">
+    {% block subBody %}{% endblock %}
+</main>
+{% endblock %}

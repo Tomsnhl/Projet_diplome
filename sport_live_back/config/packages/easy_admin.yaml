@@ -1,0 +1,6 @@
+easy_admin:
+    entities:
+        Poll:
+            class: App\Entity\Poll
+        User:
+            class: App\Entity\User 

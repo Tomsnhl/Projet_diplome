@@ -36,11 +36,12 @@ class UserService
     public function register(array $data): User
     {
         $user = new User();
+        dump($data); // Cette ligne affichera le contenu de $data
         $user->setFirstname($data['firstname']);
         $user->setLastname($data['lastname']);
         $user->setAlias($data['alias']);
         $user->setEmail($data['email']);
-        $user->setRole('ROLE_USER'); // role par défaut
+        $user->setRoles(['ROLE_USER']); // rôle par défaut
 
         // Hachage du mot de passe
         $hashedPassword = $this->passwordHasher->hashPassword($user, $data['password']);

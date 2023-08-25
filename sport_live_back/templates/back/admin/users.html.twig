@@ -1,0 +1,81 @@
+<div class="card"> 
+    <div class="card-header">
+        <h4>Utilisateurs</h4>
+    </div>
+    <div class="card-body">
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Alias</th>
+                <th>Email</th>
+               <th>Rôles</th>
+               <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajouter un nouvel utilisateur</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      {{ form_start(userForm) }}  {# Début du formulaire ici #}
+      <div class="modal-body">
+        {# Ici, vous intégrerez le formulaire d'ajout d'utilisateur #}
+        {{ form_widget(userForm) }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        <button type="submit" class="btn btn-primary">Ajouter</button>  {# Le bouton de soumission est maintenant à l'intérieur du formulaire #}
+      </div>
+      {{ form_end(userForm) }}  {# Fin du formulaire ici #}
+    </div>
+  </div>
+</div>
+
+            <!-- Modal -->
+
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.firstname }}</td> 
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.alias }}</td>
+                        <td>{{ user.email }}</td>
+                         <td>{{ user.roles|join(', ') }}</td>
+                         <td>
+            <!-- Bouton Modifier -->
+            <a href="{{ path('app_back_user_edit', {'id': user.id}) }}" class="btn btn-primary">Modifier</a>
+            
+            <!-- Bouton Supprimer avec un formulaire pour gérer la suppression -->
+            <form method="post" action="{{ path('app_back_user_delete', {'id': user.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+        </td>
+                    </tr>
+                {% endfor %} 
+                
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
+                    Ajouter un nouvel utilisateur
+                    </button>
+
+
+
+                </button>
+ 
+                
+            </tbody>
+            
+        </table>
+    </div>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
+ 
