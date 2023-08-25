@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType; // Ajouté pour les champs texte
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -17,6 +18,24 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('firstname', TextType::class, [ // Nouveau champ
+                "label" => "Prénom",
+                "attr" => [
+                    "placeholder" => "Prénom de l'utilisateur"
+                ]
+            ])
+            ->add('lastname', TextType::class, [ // Nouveau champ
+                "label" => "Nom",
+                "attr" => [
+                    "placeholder" => "Nom de l'utilisateur"
+                ]
+            ])
+            ->add('alias', TextType::class, [ // Nouveau champ
+                "label" => "Alias",
+                "attr" => [
+                    "placeholder" => "Alias de l'utilisateur"
+                ]
+            ])
             ->add('email',EmailType::class,[
                 "label" => "L'email",
                 "attr" => [
@@ -24,43 +43,34 @@ class UserType extends AbstractType
                 ]
             ]);
 
-            // Je souhaite ici ne pas afficher le champ password si je suis en mode edit
-            // En effet un admin n'est pas censé pouvoir modifier le mot de passe de quelqu'un d'autre
-            // Je vais donc utiliser une option custom_option qui me permettra de savoir si je suis en mode edit ou non
-            // Les options customs ce definissent plus bas dans la méthode configureOptions
-            // Pour les utiliser il suffit lors de la création du formulaire de passer un tableau en deuxième paramètre de la méthode createForm
-            if($options["custom_option"] !== "edit"){
-                $builder
-                // Je souhaite ici utiliser le champ repeated pour avoir deux champs password
-                // https://symfony.com/doc/current/reference/forms/types/repeated.html
-                    ->add('password',RepeatedType::class,[
-                        "help" => "Le mot de passe doit contenir au moins 4 caractères",
-                        // D'ou ici l'interet de mettre une contrainte directement dans le form vu que le mot de passe s'affichera conditionnellement
-                        "constraints" => [
-                            new Length([
-                                "min" => 4,
-                                "minMessage" => "Le mot de passe doit contenir au moins 4 caractères"
-                            ])
-                        ],
-                        "type" => PasswordType::class,
-                        'invalid_message' => 'Les deux champs doivent être identique',
-                        'required' => true,
-                        'first_options'  => ['label' => 'Le mot de passe',"attr" => ["placeholder" => "*****"]],
-                        'second_options' => ['label' => 'Répétez le mot de passe',"attr" => ["placeholder" => "*****"]],
-                    ]);
-            }
+        if($options["custom_option"] !== "edit") {
             $builder
-                ->add('roles',ChoiceType::class,[
-                    "label" => "Privilèges",
-                    "choices" => [
-                        "Manager" => "ROLE_MANAGER",
-                        "Admin" => "ROLE_ADMIN"
+                ->add('password',RepeatedType::class,[
+                    "help" => "Le mot de passe doit contenir au moins 4 caractères",
+                    "constraints" => [
+                        new Length([
+                            "min" => 4,
+                            "minMessage" => "Le mot de passe doit contenir au moins 4 caractères"
+                        ])
                     ],
-                    "multiple" => true,
-                    "expanded" => true
-                ])
-          
-        ;
+                    "type" => PasswordType::class,
+                    'invalid_message' => 'Les deux champs doivent être identique',
+                    'required' => true,
+                    'first_options'  => ['label' => 'Le mot de passe',"attr" => ["placeholder" => "*****"]],
+                    'second_options' => ['label' => 'Répétez le mot de passe',"attr" => ["placeholder" => "*****"]],
+                ]);
+        }
+
+        $builder
+            ->add('roles',ChoiceType::class,[
+                "label" => "Privilèges",
+                "choices" => [
+                    "Manager" => "ROLE_MANAGER",
+                    "Admin" => "ROLE_ADMIN"
+                ],
+                "multiple" => true,
+                "expanded" => true
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
