@@ -2,8 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Message;
 use App\Entity\User;
 use App\Form\UserType; // Assurez-vous d'avoir ce formulaire UserType.
+use App\Form\MessageType;
 use App\Repository\AnswerRepository;
 use App\Repository\MessageRepository;
 use App\Repository\PollRepository;
@@ -50,12 +52,25 @@ class DashboardController extends AbstractDashboardController
             return $this->redirectToRoute('admin');
         }
 
+        $message = new Message();
+        $messageForm = $this->createForm(MessageType::class, $message);
+        $messageForm->handleRequest($request);
+
+        if ($messageForm->isSubmitted() && $messageForm->isValid()) {
+            $this->entityManager->persist($message);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Message ajouté avec succès.');
+            return $this->redirectToRoute('admin');
+        }
+
         return $this->render('back/admin/admin_dashboard.html.twig', [
             'answers' => $this->answerRepository->findAll(),
             'messages' => $this->messageRepository->findAll(),
             'polls' => $this->pollRepository->findAll(),
             'users' => $this->userRepository->findAll(),
-            'userForm' => $form->createView()  // Passez le formulaire à votre template
+            'userForm' => $form->createView(),// Passez le formulaire à votre template
+            'messageForm' => $messageForm->createView(),
         ]);
     }
 
@@ -71,5 +86,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Sondages', 'fas fa-poll', Poll::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
+        yield MenuItem::linkToCrud('Messages','fas fa-user', Message::class);
     }
 }
