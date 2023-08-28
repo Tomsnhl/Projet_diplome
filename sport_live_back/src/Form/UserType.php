@@ -75,6 +75,7 @@ class UserType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        // Reliez ce formulaire à l'entité Poll
         $resolver->setDefaults([
             'data_class' => User::class,
             'custom_option' => "default",
