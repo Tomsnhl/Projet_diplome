@@ -45,10 +45,10 @@
                         <td>{{ message.content }}</td>
                         <td>
             <!-- Bouton Modifier -->
-            <a href="{{ path('app_back_message_edit', {'id': message.id}) }}" class="btn btn-primary">Modifier</a>
+            <a href="{{ path('admin_message_edit', {'id': message.id}) }}" class="btn btn-primary">Modifier</a>
             
             <!-- Bouton Supprimer avec un formulaire pour gérer la suppression -->
-            <form method="post" action="{{ path('app_back_message_delete', {'id': message.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+            <form method="post" action="{{ path('admin_message_edit', {'id': message.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ message.id) }}">
                 <button type="submit" class="btn btn-danger">Supprimer</button>
             </form>

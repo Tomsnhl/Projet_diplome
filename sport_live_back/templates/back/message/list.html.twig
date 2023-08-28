@@ -14,13 +14,13 @@
             </tr>
         </thead>
         <tbody>
-        {% for message in messagess %}
+        {% for message in messages %}
             <tr>
                 <td>{{ message.id }}</td>
                 
                 <td>
-                    <a href="{{ path('app_back_message_show', {'id': message.id}) }}">show</a>
-                    <a href="{{ path('app_back_message_edit', {'id': message.id}) }}">edit</a>
+                    <a href="{{ path('admin_message_show', {'id': message.id}) }}">show</a>
+                    <a href="{{ path('admin_message_edit', {'id': message.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +31,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_back_message_add') }}">Ecrire un nouveau message</a>
+    <a href="{{ path('admin_message_new') }}">Ecrire un nouveau message</a>
 {% endblock %}
