@@ -7,16 +7,24 @@ use App\Entity\Poll;
 use App\Form\UserType;
 use App\Repository\AnswerRepository;
 use App\Repository\MessageRepository;
+use DateTimeImmutable;
+use App\Entity\Message;
+use App\Form\MessageType;
 use App\Repository\PollRepository;
 use App\Repository\UserRepository;
+use App\Repository\AnswerRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use App\Form\UserType; // Assurez-vous d'avoir ce formulaire UserType.
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+
 
 class DashboardController extends AbstractDashboardController
 {
@@ -40,7 +48,7 @@ class DashboardController extends AbstractDashboardController
     /**
      * @Route("/admin", name="admin")
      */
-    public function dashboard(Request $request): Response
+    public function dashboard(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -50,10 +58,28 @@ class DashboardController extends AbstractDashboardController
             $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
 
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             $this->addFlash('success', 'Utilisateur ajouté avec succès.');
+            return $this->redirectToRoute('admin');
+        }
+
+        $message = new Message();
+        $message->setSentDate(new \DateTimeImmutable('now'));
+        $message->setIsApproved('false');
+        $message->setIsDeleted('false');
+        $message->setUser($user=$this->getUser(''));
+        //dump($message);
+        $messageForm = $this->createForm(MessageType::class, $message);
+        $messageForm->handleRequest($request);
+
+        if ($messageForm->isSubmitted() && $messageForm->isValid()) {
+            $this->entityManager->persist($message);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Message ajouté avec succès.');
             return $this->redirectToRoute('admin');
         }
 
@@ -62,7 +88,10 @@ class DashboardController extends AbstractDashboardController
             'messages' => $this->messageRepository->findAll(),
             'polls' => $this->pollRepository->findAll(),
             'users' => $this->userRepository->findAll(),
-            'userForm' => $form->createView()
+
+
+            'userForm' => $form->createView(),// Passez le formulaire à votre template
+            'messageForm' => $messageForm->createView(),
         ]);
     }
 
@@ -78,5 +107,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Sondages', 'fas fa-poll', Poll::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
+        yield MenuItem::linkToCrud('Messages','fas fa-user', Message::class);
     }
 }

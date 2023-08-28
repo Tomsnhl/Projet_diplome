@@ -49,7 +49,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_admin_dashboard_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('back/user/new.html.twig', [
+        return $this->renderForm('back/user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
