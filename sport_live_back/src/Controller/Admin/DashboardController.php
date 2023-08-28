@@ -4,9 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Entity\Poll; 
-use App\Form\UserType;
-use App\Repository\AnswerRepository;
-use App\Repository\MessageRepository;
 use DateTimeImmutable;
 use App\Entity\Message;
 use App\Form\MessageType;
@@ -18,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use App\Form\UserType; // Assurez-vous d'avoir ce formulaire UserType.
