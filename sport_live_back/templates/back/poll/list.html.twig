@@ -1,0 +1,48 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Sondages{% endblock %}
+{% block pollActive %}active{% endblock %}
+
+{% block subBody %}
+    <div class="container mt-5">
+        <h1>Liste des sondages</h1>
+
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Titre</th>
+                    <th>Utilisateur</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for poll in polls %}
+                <tr>
+                    <td>{{ poll.id }}</td>
+                    <td>{{ poll.content }}</td>
+                    <td>{{ poll.user }}</td>
+                    <td>
+                        <a href="{{ path('admin_polls_show', {'id': poll.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                        <a href="{{ path('admin_polls_edit', {'id': poll.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                        <button class="btn btn-danger btn-sm" onclick="if(confirm('Êtes-vous sûr de vouloir supprimer ce sondage?')) { document.getElementById('delete-form-{{ poll.id }}').submit(); }">Supprimer</button>
+                        <form id="delete-form-{{ poll.id }}" action="{{ path('admin_polls_delete', {'id': poll.id}) }}" method="post" style="display: none;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ poll.id) }}">
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun sondage trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="mt-3">
+            <a href="{{ path('admin_polls_new') }}" class="btn btn-success">Créer un nouveau sondage</a>
+            <a href="{{ path('admin') }}" class="btn btn-info btn">Retour au Dashboard</a>
+        </div>
+    </div>
+{% endblock %}

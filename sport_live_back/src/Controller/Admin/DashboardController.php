@@ -3,7 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Form\UserType; // Assurez-vous d'avoir ce formulaire UserType.
+use App\Entity\Poll; 
+use App\Form\UserType;
 use App\Repository\AnswerRepository;
 use App\Repository\MessageRepository;
 use App\Repository\PollRepository;
@@ -15,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class DashboardController extends AbstractDashboardController
 {
@@ -23,14 +25,16 @@ class DashboardController extends AbstractDashboardController
     private $pollRepository;
     private $userRepository;
     private $entityManager;
+    private $passwordHasher;
 
-    public function __construct(AnswerRepository $answerRepository, MessageRepository $messageRepository, PollRepository $pollRepository, UserRepository $userRepository, EntityManagerInterface $entityManager)
+    public function __construct(AnswerRepository $answerRepository, MessageRepository $messageRepository, PollRepository $pollRepository, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
     {
         $this->answerRepository = $answerRepository;
         $this->messageRepository = $messageRepository;
         $this->pollRepository = $pollRepository;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
+        $this->passwordHasher = $passwordHasher; 
     }
 
     /**
@@ -43,6 +47,9 @@ class DashboardController extends AbstractDashboardController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
+            $user->setPassword($hashedPassword);
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
@@ -55,7 +62,7 @@ class DashboardController extends AbstractDashboardController
             'messages' => $this->messageRepository->findAll(),
             'polls' => $this->pollRepository->findAll(),
             'users' => $this->userRepository->findAll(),
-            'userForm' => $form->createView()  // Passez le formulaire à votre template
+            'userForm' => $form->createView()
         ]);
     }
 
@@ -63,7 +70,7 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Sport Live Back')
-            ->disableUrlSignatures(); // Désactivation des signatures d'URL
+            ->disableUrlSignatures();
     }
 
     public function configureMenuItems(): iterable

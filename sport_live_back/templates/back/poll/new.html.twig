@@ -1,0 +1,18 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Nouveau Sondage{% endblock %}
+
+{% block subBody %}
+    <div class="container mt-5">
+        <h1>Créer un nouveau sondage</h1>
+
+        <div class="my-4">
+            {{ include('back/poll/_form.html.twig') }}
+        </div>
+
+        <div class="mt-3">
+            <a href="{{ path('admin_polls_index') }}" class="btn btn-info">Retour à la liste</a>
+            <a href="{{ path('admin') }}" class="btn btn-info">Retour au Dashboard</a>
+        </div>
+    </div>
+{% endblock %}
