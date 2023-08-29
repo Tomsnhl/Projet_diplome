@@ -4,39 +4,79 @@
 {% block pollActive %}active{% endblock %}
 
 {% block subBody %}
-    <h1>Les Sondages</h1>
+<div class="container mt-5">
+    <!-- Section Les Sondages -->
+    <div class="card mb-5">
+        <div class="card-header">
+            <h1>Les Sondages</h1>
+        </div>
+        <div class="card-body">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addPollModal">
+                Crée un nouveau sondage
+            </button>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="addPollModal" tabindex="-1" aria-labelledby="pollModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pollModalLabel">Ajouter un nouveau sondage</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        {{ form_start(pollForm) }}  {# Replace 'pollForm' with the appropriate form variable if different #}
+                        <div class="modal-body">
+                            {{ form_widget(pollForm) }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                        {{ form_end(pollForm) }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Table des sondages -->
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Id</th>
+                        <th>Content</th>
+                        <th>User</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for poll in polls %}
+                        <tr>
+                            <td>{{ poll.id }}</td>
+                            <td>{{ poll.content }}</td>
+                            <td>{{ poll.user ? poll.user.email : 'N/A' }}</td>
+                            <td>
+                                <a href="{{ path('admin_polls_show', {'id': poll.id}) }}" class="btn btn-info ">Voir</a>
+                                <a href="{{ path('admin_polls_edit', {'id': poll.id}) }}" class="btn btn-primary ">Modifier</a>
+                                <button class="btn btn-danger " onclick="if(confirm('Êtes-vous sûr de vouloir supprimer ce sondage?')) { document.getElementById('delete-form-{{ poll.id }}').submit(); }">Supprimer</button>
+                                <form id="delete-form-{{ poll.id }}" action="{{ path('admin_polls_delete', {'id': poll.id}) }}" method="post" style="display: none;">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ poll.id) }}">
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">Aucun enregistrement trouvé</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-    <table class="table table-bordered table-hover"> {# Ajout de classes Bootstrap pour un meilleur style #}
-        <thead class="thead-light"> {# Ajout de classe pour un en-tête plus clair #}
-            <tr>
-                <th>Id</th>
-                <th>Content</th>
-                <th>User</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for poll in polls %}
-            <tr>
-                <td>{{ poll.id }}</td>
-                <td>{{ poll.content }}</td>
-                <td>{{ poll.user ? poll.user.email : 'N/A' }}</td> {# Je suppose que vous souhaitez afficher l'email de l'utilisateur. Changez selon vos besoins. #}
-                <td>
-                    <a href="{{ path('admin_polls_show', {'id': poll.id}) }}" class="btn btn-info btn-sm">Voir</a> {# Bouton bleu pour "Voir" #}
-                    <a href="{{ path('admin_polls_edit', {'id': poll.id}) }}" class="btn btn-primary btn-sm">Modifier</a> {# Bouton bleu foncé pour "Modifier" #}
-                    <button class="btn btn-danger btn-sm" onclick="if(confirm('Êtes-vous sûr de vouloir supprimer ce sondage?')) { document.getElementById('delete-form-{{ poll.id }}').submit(); }">Supprimer</button>
-                        <form id="delete-form-{{ poll.id }}" action="{{ path('admin_polls_delete', {'id': poll.id}) }}" method="post" style="display: none;">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ poll.id) }}">
-                        </form>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4" class="text-center">Aucun enregistrement trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('admin_polls_new') }}" class="btn btn-success mt-3">Crée un nouveau sondage</a> {# Bouton vert pour créer un nouveau sondage #}
+{# Libraries needed for Bootstrap's JavaScript components #}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}

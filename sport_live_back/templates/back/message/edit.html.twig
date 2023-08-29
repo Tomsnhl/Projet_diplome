@@ -3,11 +3,26 @@
 {% block title %}Editer un message{% endblock %}
 
 {% block subBody %}
-    <h1>Editer un message</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">Editer un message</h1>
 
-    {{ include('back/message/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="card mb-4">
+            <div class="card-header">
+                Détails du message
+            </div>
+            <div class="card-body">
+                {{ include('back/message/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+            </div>
+        </div>
 
-    <a href="{{ path('admin_message_index') }}">back to list</a>
-
-    {{ include('back/message/_delete.html.twig') }}
+        <div class="d-flex justify-content-between">
+            <a href="{{ path('admin_message_index') }}" class="btn btn-info">Retour à la liste</a>
+            
+            <button class="btn btn-danger btn-sm" onclick="if(confirm('Êtes-vous sûr de vouloir supprimer ce message?')) { document.getElementById('delete-form-message').submit(); }">Supprimer</button>
+            <form id="delete-form-message" action="{{ path('admin_message_delete', {'id': messages.id}) }}" method="post" style="display: none;">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ messages.id) }}">
+            </form>
+        </div>
+    </div>
 {% endblock %}
