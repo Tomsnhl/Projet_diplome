@@ -41,7 +41,7 @@ security:
                 default_target_path: admin
             logout:
                 path: app_security_logout
-                target: /login
+                target: /
 
     # Contrôle d'accès pour définir les autorisations basées sur les routes
     access_control:
