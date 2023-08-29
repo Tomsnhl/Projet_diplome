@@ -1,6 +1,9 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+{% if app.user %}
+    <a href="{{ path('app_security_logout') }}" class="btn btn-danger">Déconnexion</a>
+{% endif %}
 
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Dashboard SportLive</h1>

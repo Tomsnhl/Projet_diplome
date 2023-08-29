@@ -1,6 +1,6 @@
 {% extends 'back/base.html.twig' %}
 
-{% block title %}Poll details{% endblock %}
+{% block title %}Détails des Sondages{% endblock %}
 
 {% block subBody %}
     <div class="container mt-5">
@@ -12,8 +12,8 @@
             </div>
             <div class="card-body">
                 <p><strong>ID:</strong> {{ poll.id }}</p>
-                <p><strong>Contenu:</strong> {{ poll.content }}</p>
-                <p><strong>Utilisateur:</strong> {{ poll.user ? poll.user.email : 'Aucun utilisateur associé' }}</p>
+                <p><strong>Contenu:</strong> {{ poll.content }}</p> 
+                <p><strong>Utilisateur:</strong> {{ poll.user ?poll.user.email : 'Aucun utilisateur associé' }}</p>
             </div>
         </div>
 

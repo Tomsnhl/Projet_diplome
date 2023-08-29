@@ -17,13 +17,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MessageController extends AbstractController {
 
     /**
-     * Affiche la liste de tous les sondages.
+     * Affiche la liste de tous les messages.
      *
      * @Route("/", name="admin_message_index")
      *
-     * @param MessageRepository $MessageRepository Le repository pour accéder aux sondages.
+     * @param MessageRepository $MessageRepository Le repository pour accéder aux messages.
      *
-     * @return Response La vue affichant la liste des sondages.
+     * @return Response La vue affichant la liste des messages.
      */
     public function index(MessageRepository $MessageRepository): Response {
         $message = $MessageRepository->findAll();
@@ -41,10 +41,14 @@ class MessageController extends AbstractController {
      * @param Request $request L'objet request pour gérer les requêtes HTTP.
      * @param EntityManagerInterface $em L'entity manager pour gérer les entités.
      *
-     * @return Response La vue pour la création de sondage ou la redirection vers la liste des sondages.
+     * @return Response La vue pour la création de sondage ou la redirection vers la liste des messages.
      */
     public function create(Request $request, EntityManagerInterface $em): Response {
         $message = new message();
+        $message->setSentDate(new \DateTimeImmutable("now"));
+        $message->setIsApproved("false");
+        $message->setIsDeleted("false");
+        $message->setUser($this->getUser());
         $messageForm = $this->createForm(MessageType::class, $message);
         $messageForm->handleRequest($request);
 
@@ -65,9 +69,9 @@ class MessageController extends AbstractController {
      *
      * @Route("/{id}", name="admin_message_show")
      *
-     * @param message $message Le sondage à afficher.
+     * @param message $message Le message à afficher.
      *
-     * @return Response La vue affichant les détails du sondage.
+     * @return Response La vue affichant les détails du message.
      */
     public function show(message $message): Response {
         return $this->render('back/message/show.html.twig', [
@@ -81,10 +85,10 @@ class MessageController extends AbstractController {
      * @Route("/{id}/edit", name="admin_message_edit")
      *
      * @param Request $request L'objet request pour gérer les requêtes HTTP.
-     * @param message $message Le sondage à modifier.
+     * @param message $message Le message à modifier.
      * @param EntityManagerInterface $em L'entity manager pour gérer les entités.
      *
-     * @return Response La vue pour l'édition de sondage ou la redirection vers la liste des sondages.
+     * @return Response La vue pour l'édition de message ou la redirection vers la liste des messages.
      */
     public function edit(Request $request, message $message, EntityManagerInterface $em): Response {
         $messageForm = $this->createForm(MessageType::class, $message);
@@ -104,11 +108,17 @@ class MessageController extends AbstractController {
 
    /**
     * @Route("/{id}/delete", name="admin_message_delete", methods={"POST"})
+
+    * @param Request $request L'objet request pour gérer les requêtes HTTP.
+    * @param message $message Le message à modifier.
+    * @param EntityManagerInterface $em L'entity manager pour gérer les entités.
+    *
+    * @return Response La vue pour l'édition de message ou la redirection vers la liste des messages.
     */
         public function delete(Request $request, message $message, EntityManagerInterface $em): Response {
             if ($this->isCsrfTokenValid('delete'.$message->getId(), $request->request->get('_token'))) {
 
-        // Supprimer le sondage
+        // Supprimer le message
         $em->remove($message);
         $em->flush();
     }

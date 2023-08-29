@@ -1,16 +1,19 @@
 security:
     enable_authenticator_manager: true
 
-    encoders:
+    # Définir le hasher pour les mots de passe
+    password_hashers:
         App\Entity\User:
             algorithm: bcrypt
 
+    # Définir les fournisseurs de l'utilisateur
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
 
+    # Configurer les firewalls
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -38,12 +41,22 @@ security:
                 default_target_path: admin
             logout:
                 path: app_security_logout
+                target: /login
 
+    # Contrôle d'accès pour définir les autorisations basées sur les routes
     access_control:
+        # Autoriser l'accès anonyme à l'API de connexion et d'inscription
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/users/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        # Seul l'administrateur peut accéder aux sondages via l'API
         - { path: ^/api/polls, roles: ROLE_ADMIN }
+
+        # Seul un utilisateur authentifié peut accéder à l'API
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+        # Seul l'administrateur peut accéder au tableau de bord
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:
