@@ -111,6 +111,26 @@ class AnswerService
     
     }
 
+    
+
+    public function incrementRank(int $id): Answer
+{
+    $answer = $this->getAnswer($id);
+
+    if (!$answer) {
+        throw new \Exception("Answer not found");
+    }
+
+    $currentRank = $answer->getRank();
+    $answer->setRank($currentRank + 1);
+
+    $entityManager = $this->managerRegistry->getManager();
+    $entityManager->persist($answer);
+    $entityManager->flush();
+
+    return $answer;
+}
+
 
 
 };

@@ -120,7 +120,7 @@ class Answer
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->addSelectedAnswer($this);
+            
         }
 
         return $this;
@@ -129,7 +129,7 @@ class Answer
     public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
-            $user->removeSelectedAnswer($this);
+            
         }
 
         return $this;

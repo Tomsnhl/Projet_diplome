@@ -50,7 +50,7 @@ security:
         - { path: ^/api/users/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         # Seul l'administrateur peut accéder aux sondages via l'API
-        - { path: ^/api/polls, roles: ROLE_ADMIN }
+        - { path: ^/api/polls, roles: [ROLE_ADMIN, ROLE_USER] }
 
         # Seul un utilisateur authentifié peut accéder à l'API
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
