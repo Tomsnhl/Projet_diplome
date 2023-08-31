@@ -1,0 +1,23 @@
+@use "../../assets/styles/variables" as *;
+
+section {
+    display: flex;
+    // flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1080px;
+    margin: 0 auto;
+    justify-content: center;
+    @media (max-width: $layout-breakpoint-small) {
+        flex-wrap: wrap;
+    }
+}
+
+.privacy-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $color-secondary;
+    z-index: 2;
+}
