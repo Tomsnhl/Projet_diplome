@@ -85,4 +85,19 @@ class PollController extends AbstractController
         
         return $this->json(['message' => 'Vote registered successfully.']);
     }
+
+    /**
+     * @Route("/{id}/answers", name="get_poll_with_answers", methods={"GET"})
+     */
+    public function getPollWithAnswers(int $id): JsonResponse
+    {
+        $poll = $this->pollService->getPollWithAnswers($id);
+
+        if (!$poll) {
+            return $this->json(['error' => 'Poll not found.'], 404);
+        }
+
+        return $this->json($poll, 200, [], ['groups' => ['poll:read', 'answer:read']]);
+    }
+
 }
