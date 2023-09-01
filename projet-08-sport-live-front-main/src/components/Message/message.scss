@@ -1,0 +1,36 @@
+@use "../../assets/styles/variables" as *;
+@use "sass:color";
+
+#message {
+    // background-color: $color-primary;
+    position: relative;
+    padding: 20px;
+    width: 100%;
+    textarea {
+        width: 100%;
+        min-height: 200px;
+        margin: 30px 0;
+        display: block;
+        font-size: 3em;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid $color-black;
+        background-color: color.scale($color-primary, $lightness: -20%);
+        font-family: "Climate Crisis", display;
+        &::placeholder {
+            color: color.scale($color-black, $lightness: 5%);
+        }
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
+            transition: 0.2s;
+        }
+        @media (max-width: $layout-breakpoint-small) {
+            min-height: 60vh;
+        }
+    }
+    .errorform {
+        margin: -10px 0 20px;
+        color: color.scale($color-primary, $lightness: -30%, $saturation: 90%);
+    }
+}

@@ -66,4 +66,14 @@ class AnswerController extends AbstractController
         $answers = $this->answerService->getAllAnswers();
         return $this->json($answers, 200, [], ['groups' => 'answer:read']);
     }
+
+    /**
+    * @Route("/{id}/increment", name="increment_rank", methods={"POST"})
+    */
+    public function incrementRank(int $id): JsonResponse
+    {
+        $answer = $this->answerService->incrementRank($id);
+        return $this->json($answer, 200, [], ['groups' => 'answer:read']);
+    }
+
 }

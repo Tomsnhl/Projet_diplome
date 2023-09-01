@@ -52,6 +52,18 @@ class PollService
     }
 
     /**
+    * Récupère un sondage spécifique par son ID ainsi que ses réponses.
+    *
+    * @param int $id L'ID du sondage à récupérer.
+    * @return Poll|null L'objet Poll ou null si non trouvé.
+    */
+    public function getPollWithAnswers(int $id): ?Poll
+    {
+        return $this->managerRegistry->getRepository(Poll::class)->findOneBy(['id' => $id]);
+    }
+
+
+    /**
      * Récupère tous les sondages de la base de données.
      *
      * @return array Une liste d'objets Poll.
