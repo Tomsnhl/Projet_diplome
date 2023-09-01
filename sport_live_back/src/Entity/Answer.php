@@ -31,7 +31,7 @@ class Answer
      * @ORM\Column(type="integer")
      * @Groups("answer:read")
      */
-    private $rank;
+    private $ranking;
 
     /**
      * @ORM\ManyToOne(targetEntity=Poll::class, inversedBy="answers")
@@ -72,14 +72,14 @@ class Answer
         return $this;
     }
 
-    public function getRank(): ?int
+    public function getranking(): ?int
     {
-        return $this->rank;
+        return $this->ranking;
     }
 
-    public function setRank(int $rank): self
+    public function setranking(int $ranking): self
     {
-        $this->rank = $rank;
+        $this->ranking = $ranking;
 
         return $this;
     }
