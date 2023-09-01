@@ -36,7 +36,7 @@ class UserService
     public function register(array $data): User
     {
         $user = new User();
-        dump($data); // Cette ligne affichera le contenu de $data
+        //dump($data); // Cette ligne affichera le contenu de $data
         $user->setFirstname($data['firstname']);
         $user->setLastname($data['lastname']);
         $user->setAlias($data['alias']);
