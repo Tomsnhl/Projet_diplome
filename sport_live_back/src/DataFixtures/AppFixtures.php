@@ -36,7 +36,7 @@ class AppFixtures extends Fixture
                 $answer->setContent('Réponse ' . $j . ' pour Sondage ' . $i);
 
                 // Définition du rang de la réponse.
-                $answer->setRank($j);
+                $answer->setRanking($j);
 
                 // Association de la réponse au sondage. Cela suppose que vous avez une relation entre les entités Poll et Answer.
                 // Si ce n'est pas le cas, vous pouvez supprimer cette ligne.
