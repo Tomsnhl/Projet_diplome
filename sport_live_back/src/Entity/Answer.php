@@ -72,12 +72,12 @@ class Answer
         return $this;
     }
 
-    public function getranking(): ?int
+    public function getRanking(): ?int
     {
         return $this->ranking;
     }
 
-    public function setranking(int $ranking): self
+    public function setRanking(int $ranking): self
     {
         $this->ranking = $ranking;
 

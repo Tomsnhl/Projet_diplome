@@ -34,7 +34,7 @@ class AnswerService
     {
         $answer = new Answer();
         $answer->setContent($content);
-        $answer->setRank($rank);
+        $answer->setRanking($rank);
 
         $entityManager = $this->managerRegistry->getManager();
         $entityManager->persist($answer);
@@ -71,7 +71,7 @@ class AnswerService
         }
 
         $answer->setContent($content);
-        $answer->setRank($rank);
+        $answer->setRankink($rank);
 
         $entityManager = $this->managerRegistry->getManager();
         $entityManager->persist($answer);
@@ -121,8 +121,8 @@ class AnswerService
         throw new \Exception("Answer not found");
     }
 
-    $currentRank = $answer->getRank();
-    $answer->setRank($currentRank + 1);
+    $currentRanking = $answer->getRanking();
+    $answer->setRanking($currentRanking + 1);
 
     $entityManager = $this->managerRegistry->getManager();
     $entityManager->persist($answer);
