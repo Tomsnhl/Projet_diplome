@@ -46,16 +46,17 @@ class MessageService
     }
 
     /**
-     * Récupère tous les messages de la base de données.
+     * Récupère tous les messages de la base de données du plus ancien au plus récent.
      *
      * @return array Une liste d'objets Message.
      */
     public function getAllMessages(): array
     {
-        // Utilisation de Doctrine pour récupérer tous les messages
-        return $this->managerRegistry->getRepository(Message::class)->findAll();
+        // Utilisation de Doctrine pour récupérer tous les messages et findBy pour les triers
+        return $this->managerRegistry->getRepository(Message::class)->findBy([],['sentDate'=>'DESC']);
     }
 
+    
     /**
      * Récupère un message spécifique par son ID.
      *
