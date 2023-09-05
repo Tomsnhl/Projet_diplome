@@ -4,9 +4,11 @@ namespace App\Form;
 
 use App\Entity\Answer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextType; // Importation de la classe TextType
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+
 
 class AnswerType extends AbstractType
 {
@@ -14,16 +16,17 @@ class AnswerType extends AbstractType
     {
         $builder
             ->add('content', TextType::class, [
-                'label' => 'Réponse', // Label du champ
+                'label' => 'Réponse',
                 'attr' => [
-                    'placeholder' => 'Entrez la réponse ici' // Placeholder pour le champ
+                    'placeholder' => 'Entrez la réponse ici'
                 ]
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        // Reliez ce formulaire à l'entité Answer
+        // Cette fonction configure les options pour le formulaire, 
+        // en indiquant que ce formulaire est lié à l'entité Answer.
         $resolver->setDefaults([
             'data_class' => Answer::class,
         ]);
