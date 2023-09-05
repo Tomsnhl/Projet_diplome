@@ -25,7 +25,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
         // Vérification que $user est une instance de la classe User
         if (!$user instanceof User) {
-            throw new \Exception('L\'utilisateur n\'est pas une instance valide de la classe User');
+            throw new \Exception("L'utilisateur n\'est pas une instance valide de la classe User");
         }
 
         $jwt = $this->jwtManager->create($user);
