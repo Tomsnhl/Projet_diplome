@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType; // Importation de la cl
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 
 class AnswerType extends AbstractType

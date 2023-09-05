@@ -11,23 +11,28 @@
             Informations
         </div>
         <div class="card-body">
-            <p><strong>ID:</strong> {{ poll.id }}</p>
-            <p><strong>Contenu:</strong> {{ poll.content }}</p> 
-            <p><strong>Utilisateur:</strong> {{ poll.user ? poll.user.email : 'Aucun utilisateur associé' }}</p>
+            <p><strong>ID :</strong> {{ poll.id }}</p>
+            <p><strong>Contenu :</strong> {{ poll.content }}</p> 
+            <p><strong>Utilisateur :</strong> {{ poll.user ? poll.user.email : 'Aucun utilisateur associé' }}</p>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">
             Réponses
-            <a href="{{ path('admin_answer_new', {'id': poll.id}) }}" class="btn btn-success btn-sm float-end">Ajouter une réponse</a>
+            <a href="{{ path('admin_answer_new', {'poll_id': poll.id}) }}" class="btn btn-primary btn-sm float-end">Ajouter une réponse</a>
         </div>
         <ul class="list-group list-group-flush">
             {% for answer in poll.answers %}
                 <li class="list-group-item">
                     {{ answer.content }}
-                    <a href="{{ path('admin_answer_edit', {'id': answer.id}) }}" class="btn btn-warning btn-sm float-end ms-2">Modifier</a>
-                    <a href="{{ path('admin_answer_delete', {'id': answer.id}) }}" class="btn btn-danger btn-sm float-end">Supprimer</a>
+                    <a href="{{ path('admin_answer_edit', {'id': answer.id, 'poll_id': poll.id}) }}" class="btn btn-primary btn-sm float-end ms-2">Modifier</a>
+                    
+                    <!-- Bouton Supprimer avec formulaire POST -->
+                    <form action="{{ path('admin_answer_delete', {'id': answer.id}) }}" method="post" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ answer.id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm float-end">Supprimer</button>
+                    </form>
                 </li>
             {% else %}
                 <li class="list-group-item">Aucune réponse disponible pour ce sondage.</li>

@@ -5,6 +5,7 @@ namespace App\Controller\BackOffice;
 use App\Entity\Answer;
 use App\Form\AnswerType;
 use App\Repository\AnswerRepository;
+use App\Repository\PollRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,11 +38,9 @@ class AnswersController extends AbstractController
      */
     public function index(AnswerRepository $answerRepository): Response
     {
-        // Récupération de toutes les réponses de la base de données.
-        $answers = $answerRepository->findAll();
+        $answers = $answerRepository->findAllWithPolls();
 
-        // Rendu du template avec la liste des réponses.
-        return $this->render('back/answer/index.html.twig', [
+        return $this->render('back/answer/list.html.twig', [
             'answers' => $answers,
         ]);
     }
@@ -49,41 +48,31 @@ class AnswersController extends AbstractController
     /**
      * Crée une nouvelle réponse.
      *
-     * @Route("/new", name="admin_answer_new", methods={"GET","POST"})
-     *
-     * @param Request $request L'objet request pour gérer les requêtes HTTP.
-     * @param EntityManagerInterface $entityManager L'entity manager pour gérer les entités.
-     *
-     * @return Response La vue pour créer une nouvelle réponse ou la redirection vers la liste des réponses.
+     * @Route("/new/{poll_id}", name="admin_answer_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(int $poll_id, Request $request, EntityManagerInterface $entityManager, PollRepository $pollRepository): Response
     {
-        // Création d'une nouvelle instance de la classe Answer.
+        $poll = $pollRepository->find($poll_id);
+        if (!$poll) {
+            throw $this->createNotFoundException('Sondage non trouvé');
+        }
+
         $answer = new Answer();
+        $answer->setPoll($poll);
 
-        // Création du formulaire pour une nouvelle réponse.
         $form = $this->createForm(AnswerType::class, $answer);
-
-        // Gestion de la requête du formulaire.
         $form->handleRequest($request);
 
-        // Vérification que le formulaire a été soumis et est valide.
         if ($form->isSubmitted() && $form->isValid()) {
-            // Obtenez le nombre total de réponses existantes
             $totalAnswers = count($this->doctrine->getRepository(Answer::class)->findAll());
-
-            // Incrémentez le classement de la nouvelle réponse
             $answer->setRanking($totalAnswers + 1);
 
-            // Persistance de la nouvelle réponse dans la base de données.
             $entityManager->persist($answer);
             $entityManager->flush();
 
-            // Redirection vers la liste des réponses.
-            return $this->redirectToRoute('admin_answer_index');
+            return $this->redirectToRoute('admin_polls_show', ['id' => $poll_id]);
         }
 
-        // Rendu du template pour créer une nouvelle réponse.
         return $this->render('back/answer/new.html.twig', [
             'answer' => $answer,
             'form' => $form->createView(),
@@ -93,52 +82,36 @@ class AnswersController extends AbstractController
     /**
      * Modifie une réponse existante.
      *
-     * @Route("/{id}/edit", name="admin_answer_edit", methods={"GET","POST"})
-     *
-     * @param int $id L'ID de la réponse à modifier.
-     * @param Request $request L'objet request pour gérer les requêtes HTTP.
-     * @param AnswerRepository $answerRepository Le repository pour accéder aux réponses.
-     * @param EntityManagerInterface $entityManager L'entity manager pour gérer les entités.
-     *
-     * @return Response La vue pour modifier une réponse ou la redirection vers la liste des réponses.
+     * @Route("/{id}/edit/{poll_id}", name="admin_answer_edit", methods={"GET","POST"})
      */
-    public function edit(int $id, Request $request, AnswerRepository $answerRepository, EntityManagerInterface $entityManager): Response
+    public function edit(int $id, int $poll_id, Request $request, AnswerRepository $answerRepository, EntityManagerInterface $entityManager): Response
     {
-        // Récupération de la réponse à modifier.
         $answer = $answerRepository->find($id);
 
-        // Vérification que la réponse existe.
         if (!$answer) {
             throw $this->createNotFoundException('Réponse non trouvée');
         }
 
-        // Création du formulaire pour modifier la réponse.
         $form = $this->createForm(AnswerType::class, $answer);
-
-        // Gestion de la requête du formulaire.
         $form->handleRequest($request);
 
-        // Vérification que le formulaire a été soumis et est valide.
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mise à jour de la réponse dans la base de données.
             $entityManager->flush();
-
-            // Redirection vers la liste des réponses.
-            return $this->redirectToRoute('admin_answer_index');
+            return $this->redirectToRoute('admin_polls_show', ['id' => $poll_id]);
         }
 
-        // Rendu du template pour modifier une réponse.
         return $this->render('back/answer/edit.html.twig', [
             'answer' => $answer,
             'form' => $form->createView(),
         ]);
     }
 
-   /**
+    /**
  * Supprime une réponse existante.
  *
  * @Route("/{id}/delete", name="admin_answer_delete", methods={"POST"})
  *
+ * @param int $poll_id L'ID du sondage associé à la réponse.
  * @param int $id L'ID de la réponse à supprimer.
  * @param Request $request L'objet request pour gérer les requêtes HTTP.
  * @param AnswerRepository $answerRepository Le repository pour accéder aux réponses.
@@ -156,6 +129,9 @@ public function delete(int $id, Request $request, AnswerRepository $answerReposi
         throw $this->createNotFoundException('Réponse non trouvée');
     }
 
+    // Récupération de l'ID du sondage associé à la réponse.
+    $pollId = $answer->getPoll()->getId();
+
     // Vérification du token CSRF.
     if ($this->isCsrfTokenValid('delete' . $answer->getId(), $request->request->get('_token'))) {
         // Suppression de la réponse de la base de données.
@@ -163,8 +139,24 @@ public function delete(int $id, Request $request, AnswerRepository $answerReposi
         $entityManager->flush();
     }
 
-    // Redirection vers la liste des réponses.
-    return $this->redirectToRoute('admin_answer_index');
-}
+    // Redirection vers la page "show" du sondage.
+    return $this->redirectToRoute('admin_polls_show', ['id' => $pollId]);
 }
 
+
+    /**
+     * Affiche les détails d'une réponse.
+     *
+     * @Route("/{id}", name="admin_answer_show", methods={"GET"})
+     *
+     * @param Answer $answer L'objet réponse à afficher.
+     *
+     * @return Response La vue affichant les détails de la réponse.
+     */
+    public function show(Answer $answer): Response
+    {
+        return $this->render('back/answer/show.html.twig', [
+            'answer' => $answer,
+        ]);
+    }
+}

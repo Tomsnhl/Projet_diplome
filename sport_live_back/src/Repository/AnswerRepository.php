@@ -39,6 +39,18 @@ class AnswerRepository extends ServiceEntityRepository
         }
     }
 
+   public function findAllWithPolls()
+{
+    return $this->createQueryBuilder('a')
+        ->leftJoin('a.poll', 'p')
+        ->addSelect('p')
+        ->getQuery()
+        ->getResult();
+}
+
+    
+
+
 //    /**
 //     * @return Answer[] Returns an array of Answer objects
 //     */
