@@ -4,10 +4,62 @@
         <meta charset="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Sport Live</title>
+        <title>Sport Live - Test du Chat WebSocket</title>
     </head>
     <body>
+        <h1>Test du Chat WebSocket</h1>
+        <div id="messages"></div>
+        <input type="text" id="messageInput">
+        <button onclick="sendMessage()">Envoyer</button>
+
         <div id="root"></div>
+
         <script type="module" src="/src/main.tsx"></script>
+
+        <script>
+            const messagesDiv = document.getElementById('messages');
+            const messageInput = document.getElementById('messageInput');
+            
+            const ws = new WebSocket('ws://127.0.0.1:8080/chat');
+
+            ws.onopen = () => {
+                console.log('Connecté au serveur WebSocket');
+            };
+
+            ws.onclose = (event) => {
+                if (event.wasClean) {
+                    console.log(`Connexion fermée proprement, code=${event.code}, raison=${event.reason}`);
+                } else {
+                    console.error('Déconnexion du WebSocket');
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error(`Erreur dans le WebSocket: ${error.message}`);
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const messageData = JSON.parse(event.data);
+                    const messageElement = document.createElement('div');
+                    messageElement.textContent = messageData.msg;
+                    messagesDiv.appendChild(messageElement);
+                } catch (e) {
+                    console.error('Erreur lors du décodage du message:', e);
+                }
+            };
+
+            function sendMessage() {
+                if (ws.readyState !== WebSocket.OPEN) {
+                    console.error("WebSocket n'est pas ouvert");
+                    return;
+                }
+
+                if (messageInput.value) {
+                    ws.send(JSON.stringify({ message: messageInput.value }));
+                    messageInput.value = '';
+                }
+            }
+        </script>
     </body>
 </html>

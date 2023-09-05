@@ -24,7 +24,7 @@ security:
             stateless: true
             json_login:
                 check_path: /api/login_check
-                success_handler: lexik_jwt_authentication.handler.authentication_success
+                success_handler: App\EventListener\AuthenticationSuccessListener # Ici, vous spécifiez votre service personnalisé
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         api:

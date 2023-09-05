@@ -263,9 +263,9 @@
   "version" "8.48.0"
 
 "@humanwhocodes/config-array@^0.11.10":
-  "integrity" "sha512-KVVjQmNUepDVGXNuoRRdmmEjruj0KfiGSbS8LVc12LMsWDQzRXJ0qdhN8L8uUigKpfEHRhlaQFY0ib1tnUbNeQ=="
-  "resolved" "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.10.tgz"
-  "version" "0.11.10"
+  "integrity" "sha512-N2brEuAadi0CcdeMXUkhbZB84eskAc8MEX1By6qEchoVywSgXPIjou4rYsl0V3Hj0ZnuGycGCjdNgockbzeWNA=="
+  "resolved" "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.11.tgz"
+  "version" "0.11.11"
   dependencies:
     "@humanwhocodes/object-schema" "^1.2.1"
     "debug" "^4.1.1"
@@ -679,9 +679,9 @@
     "esutils" "^2.0.2"
 
 "electron-to-chromium@^1.4.477":
-  "integrity" "sha512-cSMwIAd8yUh54VwitVRVvHK66QqHWE39C3DRj8SWiXitEpVSY3wNPD9y1pxQtLIi4w3UdzF9klLsmuPshz09DQ=="
-  "resolved" "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.504.tgz"
-  "version" "1.4.504"
+  "integrity" "sha512-0A50eL5BCCKdxig2SsCXhpuztnB9PfUgRMojj5tMvt8O54lbwz3t6wNgnpiTRosw5QjlJB7ixhVyeg8daLQwSQ=="
+  "resolved" "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.505.tgz"
+  "version" "1.4.505"
 
 "esbuild@^0.18.10":
   "integrity" "sha512-ceqxoedUrcayh7Y7ZX6NdbbDzGROiyVBgC4PriJThBKSVPWnnFHZAkfI1lJT8QFkOwH4qOS2SJkS4wvpGl8BpA=="
@@ -1256,9 +1256,9 @@
   "version" "2.3.1"
 
 "postcss@^8.4.27":
-  "integrity" "sha512-Z7V5j0cq8oEKyejIKfpD8b4eBy9cwW2JWPk0+fB1HOAMsfHbnAXLLS+PfVWlzMSLQaWttKDt607I0XHmpE67Vw=="
-  "resolved" "https://registry.npmjs.org/postcss/-/postcss-8.4.28.tgz"
-  "version" "8.4.28"
+  "integrity" "sha512-cbI+jaqIeu/VGqXEarWkRCCffhjgXc0qjBtXpqJhTBohMUjUQnbBr0xqX3vEKudc4iviTewcJo5ajcec5+wdJw=="
+  "resolved" "https://registry.npmjs.org/postcss/-/postcss-8.4.29.tgz"
+  "version" "8.4.29"
   dependencies:
     "nanoid" "^3.3.6"
     "picocolors" "^1.0.0"
