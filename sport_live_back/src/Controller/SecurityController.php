@@ -2,15 +2,17 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
+
 {
     /**
-     * @Route("/", name="app_security_login")
+     * @Route("/dashboard/login", name="app_security_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -23,6 +25,14 @@ class SecurityController extends AbstractController
             "last_username" => $lastUsername,
             "error" => $error
         ]);
+    }
+
+    /**
+     * @Route("/", name="root")
+     */
+    public function index(): RedirectResponse
+    {
+        return $this->redirectToRoute('app_security_login');
     }
 
      /**
