@@ -1,0 +1,20 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Ajouter une Nouvelle Réponse{% endblock %}
+
+{% block subBody %}
+<div class="container mt-5">
+    <h1>Ajouter une Nouvelle Réponse au Sondage : {{ poll.title }}</h1>
+    
+    {{ form_start(form) }}
+    <div class="mb-3">
+        {{ form_label(form.content, 'Réponse', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <a href="{{ path('admin_polls_show', {'id': poll.id}) }}" class="btn btn-secondary">Retour</a>
+    </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

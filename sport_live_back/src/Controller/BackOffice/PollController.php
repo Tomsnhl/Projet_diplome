@@ -10,12 +10,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Answer;
+use App\Form\AnswerType;
+
 
 /**
  * @Route("/admin/polls")
  */
-class PollController extends AbstractController {
-
+class PollController extends AbstractController
+{
     /**
      * Affiche la liste de tous les sondages.
      *
@@ -25,7 +28,8 @@ class PollController extends AbstractController {
      *
      * @return Response La vue affichant la liste des sondages.
      */
-    public function index(PollRepository $pollRepository): Response {
+    public function index(PollRepository $pollRepository): Response
+    {
         $polls = $pollRepository->findAll();
 
         return $this->render('back/poll/list.html.twig', [
@@ -43,7 +47,8 @@ class PollController extends AbstractController {
      *
      * @return Response La vue pour la création de sondage ou la redirection vers la liste des sondages.
      */
-    public function create(Request $request, EntityManagerInterface $em): Response {
+    public function create(Request $request, EntityManagerInterface $em): Response
+    {
         $poll = new Poll();
         $form = $this->createForm(PollType::class, $poll);
         $form->handleRequest($request);
@@ -69,7 +74,8 @@ class PollController extends AbstractController {
      *
      * @return Response La vue affichant les détails du sondage.
      */
-    public function show(Poll $poll): Response {
+    public function show(Poll $poll): Response
+    {
         return $this->render('back/poll/show.html.twig', [
             'poll' => $poll
         ]);
@@ -86,7 +92,8 @@ class PollController extends AbstractController {
      *
      * @return Response La vue pour l'édition de sondage ou la redirection vers la liste des sondages.
      */
-    public function edit(Request $request, Poll $poll, EntityManagerInterface $em): Response {
+    public function edit(Request $request, Poll $poll, EntityManagerInterface $em): Response
+    {
         $form = $this->createForm(PollType::class, $poll);
         $form->handleRequest($request);
 
@@ -102,22 +109,23 @@ class PollController extends AbstractController {
         ]);
     }
 
-   /**
-    * @Route("/{id}/delete", name="admin_polls_delete", methods={"POST"})
-    */
-        public function delete(Request $request, Poll $poll, EntityManagerInterface $em): Response {
-            if ($this->isCsrfTokenValid('delete'.$poll->getId(), $request->request->get('_token'))) {
-        // Supprimer toutes les réponses associées avant de supprimer le sondage
-                foreach ($poll->getAnswers() as $answer) {
-            $em->remove($answer);
+    /**
+     * @Route("/{id}/delete", name="admin_polls_delete", methods={"POST"})
+     */
+    public function delete(Request $request, Poll $poll, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$poll->getId(), $request->request->get('_token'))) {
+            // Supprimer toutes les réponses associées avant de supprimer le sondage
+            foreach ($poll->getAnswers() as $answer) {
+                $em->remove($answer);
+            }
+            // Supprimer le sondage
+            $em->remove($poll);
+            $em->flush();
         }
-        // Supprimer le sondage
-        $em->remove($poll);
-        $em->flush();
-    }
 
-    return $this->redirectToRoute('admin_polls_index');
-}
+        return $this->redirectToRoute('admin_polls_index');
+    }
 
     /**
      * Affiche les réponses d'un sondage spécifique.
@@ -129,9 +137,11 @@ class PollController extends AbstractController {
      *
      * @return Response La vue affichant les réponses du sondage.
      */
-    public function answers(Poll $poll): Response {
+    public function answers(Poll $poll): Response
+    {
         return $this->render('back/answer/answer.html.twig', [
             'poll' => $poll
         ]);
     }
+
 }
