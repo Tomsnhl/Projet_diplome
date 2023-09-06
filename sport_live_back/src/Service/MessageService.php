@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Entity\Message;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -32,31 +33,47 @@ class MessageService
      */
     public function createMessage(array $data): Message
     {
+        // Vérification de l'existence des clés nécessaires dans le tableau de données
+        if (!isset($data['content']) || !isset($data['user_id'])) {
+            throw new \Exception('Missing necessary data keys: content or user_id');
+        }
+    
         // Création d'une nouvelle instance de Message
         $message = new Message();
         $message->setContent($data['content']);
         $message->setSentDate(new \DateTime());  // La date actuelle est utilisée comme date d'envoi
-        $message->setIsApproved(false);  // Par défaut, le message n'est pas approuvé
-
-        // Sauvegarde du message dans la base de données
+        $message->setIsApproved(false);  // Attribuer une valeur par défaut à isApproved
+        $message->setIsDeleted(false);  // Attribuer une valeur par défaut à isDeleted
+    
+        // Obtention de l'entity manager
         $entityManager = $this->managerRegistry->getManager();
+    
+        // Recherche de l'utilisateur associé et liaison avec le message
+        $user = $entityManager->getRepository(User::class)->find($data['user_id']);
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+        $message->setUser($user);
+    
+        // Sauvegarde du message dans la base de données
         $entityManager->persist($message);
         $entityManager->flush();
-
+    
         return $message;
     }
-
+    
     /**
-     * Récupère tous les messages de la base de données.
+     * Récupère tous les messages de la base de données du plus ancien au plus récent.
      *
      * @return array Une liste d'objets Message.
      */
     public function getAllMessages(): array
     {
-        // Utilisation de Doctrine pour récupérer tous les messages
-        return $this->managerRegistry->getRepository(Message::class)->findAll();
+        
+        return $this->managerRegistry->getRepository(Message::class)->findBy([],['sentDate'=>'DESC'],10);
     }
 
+    
     /**
      * Récupère un message spécifique par son ID.
      *
