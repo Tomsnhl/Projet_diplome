@@ -55,6 +55,7 @@ class MessageController extends AbstractController
         $messages = $this->messageService->getAllMessages();
         return $this->json($messages, 200, [], ['groups' => 'message:read']);
     }
+    
 
     /**
      * Récupère un message spécifique par son ID.
