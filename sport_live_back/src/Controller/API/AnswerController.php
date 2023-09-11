@@ -64,7 +64,18 @@ class AnswerController extends AbstractController
     public function getAllAnswers(): JsonResponse
     {
         $answers = $this->answerService->getAllAnswers();
-        return $this->json($answers, 200, [], ['groups' => 'answer:read']);
+        $responseData = [];
+
+        foreach ($answers as $answer) {
+            $responseData[] = [
+                'id' => $answer->getId(),
+                'content' => $answer->getContent(),
+                'ranking' => $answer->getRanking(),
+                'poll_id' => $answer->getPoll() ? $answer->getPoll()->getId() : null,
+            ];
+        }
+
+        return $this->json($responseData, 200);
     }
 
     /**

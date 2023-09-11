@@ -38,10 +38,10 @@ security:
             form_login:
                 login_path: app_security_login
                 check_path: app_security_login
-                default_target_path: admin
+                default_target_path: app_admin_dashboard_index
             logout:
                 path: app_security_logout
-                target: /
+                target: /dashboard/login
 
     # Contrôle d'accès pour définir les autorisations basées sur les routes
     access_control:

@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\Message;
 use App\Entity\User;
+use App\Entity\Message;
 use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * Service pour gérer les opérations liées aux messages.
@@ -68,8 +69,8 @@ class MessageService
      */
     public function getAllMessages(): array
     {
-        // Utilisation de Doctrine pour récupérer tous les messages et findBy pour les triers
-        return $this->managerRegistry->getRepository(Message::class)->findBy([],['sentDate'=>'DESC']);
+        
+        return $this->managerRegistry->getRepository(Message::class)->findBy([],['sentDate'=>'DESC'],10);
     }
 
     
